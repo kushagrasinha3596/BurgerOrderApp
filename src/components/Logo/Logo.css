@@ -1,0 +1,14 @@
+.Logo {
+    background-color: white;
+    position: fixed;
+    height: 8%;
+    z-index: 95;
+    margin-top: -11%;
+    margin-left: 45%;
+    border-radius: 12%;
+}
+
+.Logo img {
+    height: 85%;
+    padding-top: 3%;
+}
