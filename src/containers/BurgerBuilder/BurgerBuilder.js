@@ -21,7 +21,8 @@ class BurgerBuilder extends React.Component {
             meat: 0
         },
         totalPrice: 4,
-        purchaseable: false
+        purchaseable: false,
+        purchasing: false
     }
 
     updatePurchaseable = (updatedIngredient) => {
@@ -31,9 +32,14 @@ class BurgerBuilder extends React.Component {
         }).reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
         },0);
-        debugger
         this.setState({
             purchaseable: (sum > 0) ? true : false
+        });
+    }
+
+    onPurchasing = () => {
+        this.setState({
+            purchasing: true
         });
     }
 
@@ -50,6 +56,12 @@ class BurgerBuilder extends React.Component {
             totalPrice: updatedPrice
         });
         this.updatePurchaseable(updatedIngredient);
+    }
+
+    purchaseCancelHandler = () => {
+        this.setState({
+            purchasing: false
+        });
     }
 
     removeIngredient = (type) => {
@@ -76,8 +88,11 @@ class BurgerBuilder extends React.Component {
         }
         return (
             <React.Fragment>
-                <Modal>
-                    <OrderSummary ingredients={this.state.ingredients}></OrderSummary>
+                <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
+                    <OrderSummary 
+                    ingredients={this.state.ingredients}
+                    orderSummaryShow={this.state.purchasing}
+                    ></OrderSummary>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}></Burger>
                 <BuildControls 
@@ -85,7 +100,8 @@ class BurgerBuilder extends React.Component {
                 removeIngredient={this.removeIngredient}
                 toDisable={disabledInfo}
                 price={this.state.totalPrice}
-                purchaseable={this.state.purchaseable}></BuildControls>
+                purchaseable={this.state.purchaseable}
+                purchase={this.onPurchasing}></BuildControls>
             </React.Fragment>
         )
     }

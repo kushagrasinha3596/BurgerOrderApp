@@ -3,9 +3,9 @@ import classes from './Burger.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
 const burger = (props) => {
-    let transformedBurger = Object.keys(props.ingredients).map((ingredient) => {
-        return [...Array(props.ingredients[ingredient])].map((_, index) => {
-            return <BurgerIngredient key={index++} type={ingredient}></BurgerIngredient>
+    let transformedBurger = Object.keys(props.ingredients).map((ingredient, index) => {
+        return [...Array(props.ingredients[ingredient])].map((_) => {
+            return <BurgerIngredient key={index} type={ingredient}></BurgerIngredient>
         });
     }).reduce((accumulator, currentValue) => {
         return accumulator.concat(currentValue);

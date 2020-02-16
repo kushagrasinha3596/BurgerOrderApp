@@ -2,7 +2,6 @@ import React from 'react';
 
 const orderSummary = (props) => {
     const ingredientSummary = Object.keys(props.ingredients).map((ing) => {
-        debugger
         return <li key={ing}><span 
         style={{textTransform: 'capitalize'}}>
             {ing}</span>: {props.ingredients[ing]}
