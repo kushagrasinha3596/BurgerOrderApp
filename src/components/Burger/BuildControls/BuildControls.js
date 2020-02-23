@@ -10,41 +10,49 @@ const useStyles = makeStyles(theme => ({
         '& > *': {
             margin: theme.spacing(1),
             backgroundColor: '#A0DB41',
-        border: '1px solid #966909',
-        color: '#966909'
+            border: '1px solid #966909',
+            color: '#966909'
         },
     }
 }));
 
 const controls = [
-    {label: 'Salad', type:'salad'},
-    {label: 'Bacon', type:'bacon'},
-    {label: 'Meat', type:'meat'},
-    {label: 'Cheese', type:'cheese'}
+    { label: 'Salad', type: 'salad' },
+    { label: 'Bacon', type: 'bacon' },
+    { label: 'Meat', type: 'meat' },
+    { label: 'Cheese', type: 'cheese' }
 ];
 
 const buildControls = (props) => {
-     const muiClasses = useStyles();
+    const muiClasses = useStyles();
     return (
-        <Grid item>
-    <div className={classes.BuildControls}>
-        <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
-        {controls.map((control) => {
-            return <BuildControl 
-            added={() => props.ingredientAdded(control.type)} 
-            key={control.label} 
-            label={control.type}
-            toDisable={props.toDisable[control.type]}
-            deleted={() => props.removeIngredient(control.type)}></BuildControl>
-        })}
-        <div className={muiClasses.root}>
-        <Button 
-                variant="contained" 
-                onClick={props.purchase}
-                disabled={!props.purchaseable}>CONTINUE</Button>
-                </div>
-    </div>
-    </Grid>
+        <div className={classes.BuildControls}>
+            <Grid style={{
+                justifyContent:'space-between'
+            }} container>
+                <Grid item>
+                    <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
+                </Grid>
+                {controls.map((control) => {
+                    return <Grid item>
+                        <BuildControl
+                            added={() => props.ingredientAdded(control.type)}
+                            key={control.label}
+                            label={control.type}
+                            toDisable={props.toDisable[control.type]}
+                            deleted={() => props.removeIngredient(control.type)}></BuildControl>
+                    </Grid>
+                })}
+                <Grid item>
+                    <div className={muiClasses.root}>
+                        <Button
+                            variant="contained"
+                            onClick={props.purchase}
+                            disabled={!props.purchaseable}>CONTINUE</Button>
+                    </div>
+                </Grid>
+            </Grid>
+        </div>
     )
 }
 

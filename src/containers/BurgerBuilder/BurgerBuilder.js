@@ -104,7 +104,6 @@ class BurgerBuilder extends React.Component {
                     price={this.state.totalPrice}></OrderSummary>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}></Burger>
-                <Grid container>
                 <BuildControls 
                 ingredientAdded={this.addIngredient}
                 removeIngredient={this.removeIngredient}
@@ -112,7 +111,6 @@ class BurgerBuilder extends React.Component {
                 price={this.state.totalPrice}
                 purchaseable={this.state.purchaseable}
                 purchase={this.onPurchasing}></BuildControls>
-                </Grid>
             </React.Fragment>
         )
     }
