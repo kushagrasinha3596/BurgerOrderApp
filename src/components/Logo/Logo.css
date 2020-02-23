@@ -6,6 +6,13 @@
     margin-top: -11%;
     margin-left: 45%;
     border-radius: 12%;
+    right: 5px;
+}
+
+@media (max-width: 500px) and (max-height: 500px){
+    .Logo {
+        margin-top: -23%;
+    }  
 }
 
 .Logo img {

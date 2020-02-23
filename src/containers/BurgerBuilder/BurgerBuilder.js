@@ -3,6 +3,7 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Grid from '@material-ui/core/Grid';
 
 const INGREDIENT_PRICE = {
     salad: 0.5,
@@ -92,7 +93,9 @@ class BurgerBuilder extends React.Component {
         }
         return (
             <React.Fragment>
-                <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
+                <Modal 
+                show={this.state.purchasing} 
+                modalClosed={this.purchaseCancelHandler}>
                     <OrderSummary 
                     ingredients={this.state.ingredients}
                     orderSummaryShow={this.state.purchasing}
@@ -101,6 +104,7 @@ class BurgerBuilder extends React.Component {
                     price={this.state.totalPrice}></OrderSummary>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}></Burger>
+                <Grid container>
                 <BuildControls 
                 ingredientAdded={this.addIngredient}
                 removeIngredient={this.removeIngredient}
@@ -108,9 +112,11 @@ class BurgerBuilder extends React.Component {
                 price={this.state.totalPrice}
                 purchaseable={this.state.purchaseable}
                 purchase={this.onPurchasing}></BuildControls>
+                </Grid>
             </React.Fragment>
         )
     }
 }
+
 
 export default BurgerBuilder;

@@ -14,6 +14,13 @@
     }
 }
 
+@media (max-width: 500px) and (max-height: 500px){
+.initialText{
+    font-size: smaller;
+    margin-right: 10%;
+}
+}
+
 @media (min-width: 500px) and (min-height: 401px){
     .Burger{
         width: 450px;

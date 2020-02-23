@@ -3,6 +3,7 @@ import classes from './BuildControls.css';
 import BuildControl from './BuildControl/BuildControl';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,6 +26,7 @@ const controls = [
 const buildControls = (props) => {
      const muiClasses = useStyles();
     return (
+        <Grid item>
     <div className={classes.BuildControls}>
         <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
         {controls.map((control) => {
@@ -42,6 +44,7 @@ const buildControls = (props) => {
                 disabled={!props.purchaseable}>CONTINUE</Button>
                 </div>
     </div>
+    </Grid>
     )
 }
 
