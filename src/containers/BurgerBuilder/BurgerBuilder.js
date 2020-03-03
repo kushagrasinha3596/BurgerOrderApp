@@ -3,7 +3,9 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import Grid from '@material-ui/core/Grid';
+import CustomAxios from '../../axios-orders';
+import Loader from '../../components/UI/Spinner/Spinner';
+import ErrorHandler from '../../hoc/WithError/ErrorHandler';
 
 const INGREDIENT_PRICE = {
     salad: 0.5,
@@ -23,7 +25,8 @@ class BurgerBuilder extends React.Component {
         },
         totalPrice: 4,
         purchaseable: false,
-        purchasing: false
+        purchasing: false,
+        loading: false
     }
 
     updatePurchaseable = (updatedIngredient) => {
@@ -66,7 +69,34 @@ class BurgerBuilder extends React.Component {
     }
 
     purchaseContinueHandler = () => {
-        alert('You Continued');
+        this.setState({
+            loading: true
+        });
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice,
+            customer: {
+                name: 'Kushagra Sinha',
+                address: 'Gaur City'
+            },
+            deliverMode: 'fastest'
+        }
+        CustomAxios.post('/orders.json', order)
+        .then((response) => {
+            console.log(response);
+            this.setState({
+                loading: false,
+                purchasing: false
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            this.setState({
+                loading: false,
+                purchasing: false
+            });
+        });
+
     }
 
     removeIngredient = (type) => {
@@ -91,17 +121,24 @@ class BurgerBuilder extends React.Component {
         for(let key in disabledInfo){
             disabledInfo[key] <= 0 ? disabledInfo[key] = true : disabledInfo[key] = false;
         }
+
+        let ordersummary = null;
+        if(this.state.loading){
+            ordersummary = <Loader/>;
+        }else{
+            ordersummary = <OrderSummary 
+            ingredients={this.state.ingredients}
+            orderSummaryShow={this.state.purchasing}
+            purchaseCancelled={this.purchaseCancelHandler}
+            purchaseContinued={this.purchaseContinueHandler}
+            price={this.state.totalPrice}></OrderSummary>
+        }
         return (
             <React.Fragment>
                 <Modal 
                 show={this.state.purchasing} 
                 modalClosed={this.purchaseCancelHandler}>
-                    <OrderSummary 
-                    ingredients={this.state.ingredients}
-                    orderSummaryShow={this.state.purchasing}
-                    purchaseCancelled={this.purchaseCancelHandler}
-                    purchaseContinued={this.purchaseContinueHandler}
-                    price={this.state.totalPrice}></OrderSummary>
+                    {ordersummary}
                 </Modal>
                 <Burger ingredients={this.state.ingredients}></Burger>
                 <BuildControls 
@@ -117,4 +154,4 @@ class BurgerBuilder extends React.Component {
 }
 
 
-export default BurgerBuilder;
+export default ErrorHandler(BurgerBuilder, CustomAxios);
