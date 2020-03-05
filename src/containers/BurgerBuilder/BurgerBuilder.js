@@ -17,16 +17,28 @@ const INGREDIENT_PRICE = {
 class BurgerBuilder extends React.Component {
 
     state = {
-        ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0
-        },
+        ingredients: null,
         totalPrice: 4,
         purchaseable: false,
         purchasing: false,
-        loading: false
+        loading: false,
+        error: false
+    }
+
+    componentDidMount(){
+        CustomAxios.get('https://burgerbuilder-ea448.firebaseio.com/ingredients.json')
+        .then((response)=> {
+            this.setState({
+                ingredients: response.data
+            });
+        })
+        .catch((error) => {
+            this.setState({
+                loading: false,
+                error: true
+            });
+            console.log("Error ocurred in fetching data ", error);
+        });
     }
 
     updatePurchaseable = (updatedIngredient) => {
@@ -123,8 +135,8 @@ class BurgerBuilder extends React.Component {
         }
 
         let ordersummary = null;
-        if(this.state.loading){
-            ordersummary = <Loader/>;
+        if(this.state.loading || !this.state.ingredients){
+            ordersummary = this.state.error ? <p>Sorry! Can't Load Ingredients...</p> : <Loader/>;
         }else{
             ordersummary = <OrderSummary 
             ingredients={this.state.ingredients}
@@ -133,6 +145,12 @@ class BurgerBuilder extends React.Component {
             purchaseContinued={this.purchaseContinueHandler}
             price={this.state.totalPrice}></OrderSummary>
         }
+
+        let burger = this.state.error ? <p>Sorry! Can't Load Ingredients...</p> : <Loader/>;
+        if(this.state.ingredients){
+            burger = <Burger ingredients={this.state.ingredients}></Burger>;
+        }
+
         return (
             <React.Fragment>
                 <Modal 
@@ -140,7 +158,7 @@ class BurgerBuilder extends React.Component {
                 modalClosed={this.purchaseCancelHandler}>
                     {ordersummary}
                 </Modal>
-                <Burger ingredients={this.state.ingredients}></Burger>
+                {burger}
                 <BuildControls 
                 ingredientAdded={this.addIngredient}
                 removeIngredient={this.removeIngredient}
