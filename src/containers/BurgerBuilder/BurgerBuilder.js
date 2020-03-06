@@ -6,6 +6,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import CustomAxios from '../../axios-orders';
 import Loader from '../../components/UI/Spinner/Spinner';
 import ErrorHandler from '../../hoc/WithError/ErrorHandler';
+import Typography from '@material-ui/core/Typography';
 
 const INGREDIENT_PRICE = {
     salad: 0.5,
@@ -15,7 +16,7 @@ const INGREDIENT_PRICE = {
 }
 
 class BurgerBuilder extends React.Component {
-
+    
     state = {
         ingredients: null,
         totalPrice: 4,
@@ -26,7 +27,7 @@ class BurgerBuilder extends React.Component {
     }
 
     componentDidMount(){
-        CustomAxios.get('https://burgerbuilder-ea448.firebaseio.com/ingredients.json')
+        CustomAxios.get('https://burgerbuilder-ea448.firebaseio.com/ingredients')
         .then((response)=> {
             this.setState({
                 ingredients: response.data
@@ -35,7 +36,8 @@ class BurgerBuilder extends React.Component {
         .catch((error) => {
             this.setState({
                 loading: false,
-                error: true
+                error: true,
+                purchaseable: false
             });
             console.log("Error ocurred in fetching data ", error);
         });
@@ -136,7 +138,11 @@ class BurgerBuilder extends React.Component {
 
         let ordersummary = null;
         if(this.state.loading || !this.state.ingredients){
-            ordersummary = this.state.error ? <p>Sorry! Can't Load Ingredients...</p> : <Loader/>;
+            ordersummary = this.state.error ? 
+           
+            <Typography variant="h3" gutterBottom>
+            Sorry! Can't Load Ingredients...
+          </Typography> : <Loader/>;
         }else{
             ordersummary = <OrderSummary 
             ingredients={this.state.ingredients}
@@ -146,7 +152,11 @@ class BurgerBuilder extends React.Component {
             price={this.state.totalPrice}></OrderSummary>
         }
 
-        let burger = this.state.error ? <p>Sorry! Can't Load Ingredients...</p> : <Loader/>;
+        let burger = this.state.error ? 
+      
+        <Typography variant="h3" gutterBottom>
+            Sorry! Can't Load Ingredients...
+          </Typography> : <Loader/>;
         if(this.state.ingredients){
             burger = <Burger ingredients={this.state.ingredients}></Burger>;
         }
@@ -159,7 +169,8 @@ class BurgerBuilder extends React.Component {
                     {ordersummary}
                 </Modal>
                 {burger}
-                <BuildControls 
+                <BuildControls
+                error = {this.state.error.message}
                 ingredientAdded={this.addIngredient}
                 removeIngredient={this.removeIngredient}
                 toDisable={disabledInfo}
