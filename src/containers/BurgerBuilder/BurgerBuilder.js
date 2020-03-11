@@ -27,7 +27,7 @@ class BurgerBuilder extends React.Component {
     }
 
     componentDidMount(){
-        CustomAxios.get('https://burgerbuilder-ea448.firebaseio.com/ingredients')
+        CustomAxios.get('https://burgerbuilder-ea448.firebaseio.com/ingredients.json')
         .then((response)=> {
             this.setState({
                 ingredients: response.data
@@ -83,34 +83,43 @@ class BurgerBuilder extends React.Component {
     }
 
     purchaseContinueHandler = () => {
-        this.setState({
-            loading: true
-        });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Kushagra Sinha',
-                address: 'Gaur City'
-            },
-            deliverMode: 'fastest'
-        }
-        CustomAxios.post('/orders.json', order)
-        .then((response) => {
-            console.log(response);
-            this.setState({
-                loading: false,
-                purchasing: false
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            this.setState({
-                loading: false,
-                purchasing: false
-            });
-        });
+        // this.setState({
+        //     loading: true
+        // });
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer: {
+        //         name: 'Kushagra Sinha',
+        //         address: 'Gaur City'
+        //     },
+        //     deliverMode: 'fastest'
+        // }
+        // CustomAxios.post('/orders.json', order)
+        // .then((response) => {
+        //     console.log(response);
+        //     this.setState({
+        //         loading: false,
+        //         purchasing: false
+        //     });
+        // })
+        // .catch((error) => {
+        //     console.log(error);
+        //     this.setState({
+        //         loading: false,
+        //         purchasing: false
+        //     });
+        // });
+        let queryParams = [];
 
+        for(let ing in this.state.ingredients){
+            queryParams.push(encodeURIComponent(ing) + '=' + encodeURIComponent(this.state.ingredients[ing]));
+        }
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname:'/checkout',
+            search: '?' + queryString
+        });
     }
 
     removeIngredient = (type) => {

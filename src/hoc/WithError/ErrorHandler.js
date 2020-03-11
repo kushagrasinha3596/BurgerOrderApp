@@ -8,7 +8,8 @@ const ErrorHandler = (WrappedComponent, axios) => {
             error: null
         }
 
-        componentWillMount(){
+        constructor(){
+            super();
             this.reqInterceptor = axios.interceptors.request.use(req => {
                 this.setState({error: null});
                 return req;
@@ -19,10 +20,10 @@ const ErrorHandler = (WrappedComponent, axios) => {
             });
         }
 
-        componentWillUnmount(){
-            this.axios.request.interceptors.eject(this.reqInterceptor);
-            this.axios.response.interceptors.eject(this.resInterceptor);
-        }
+        // componentWillUnmount(){
+        //     this.axios.request.interceptors.eject(this.reqInterceptor);
+        //     this.axios.response.interceptors.eject(this.resInterceptor);
+        // }
 
         errorHandler = () => {
             this.setState({error: null});

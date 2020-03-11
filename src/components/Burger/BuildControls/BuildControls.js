@@ -34,10 +34,9 @@ const buildControls = (props) => {
                     <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
                 </Grid>
                 {controls.map((control) => {
-                    return <Grid item>
+                    return <Grid item key={control.label}>
                         <BuildControl
                             added={() => props.ingredientAdded(control.type)}
-                            key={control.label}
                             label={control.type}
                             toDisable={props.toDisable[control.type]}
                             deleted={() => props.removeIngredient(control.type)}></BuildControl>
