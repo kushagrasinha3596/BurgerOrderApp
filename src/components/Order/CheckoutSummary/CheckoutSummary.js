@@ -11,16 +11,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const checkoutSummary = (props) => {
-  debugger
   const classes = useStyles();
 
-  const checkoutCancelledHandler = () => {
-    this.props.history.goBack();
-  }
-
-  const checkoutContinuedHandler = () => {
-    this.props.history.push('/checkout/contact-data');
-  }
   return (
     <Box textAlign="center" width={1}>
       <h1>Hope it tastes well!!!</h1>

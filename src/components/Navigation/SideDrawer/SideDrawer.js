@@ -16,6 +16,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
 
 const drawerWidth = 150;
 
@@ -28,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     button:{
       margin: '5px',
       backgroundColor: '#99703F'
+    },
+    buttonRoot: {
+      display: 'inline-block'
     },
     appBar: {
       transition: theme.transitions.create(['margin', 'width'], {
@@ -149,14 +153,30 @@ const appBar = () => {
             </IconButton>
           </div>
           <Divider />
+          <Link
+          to="/">
           <Button 
           variant="contained" 
           color="primary"
+          classes={
+            {
+              root: classes.buttonRoot
+            }
+          }
           className={classes.button}>Burger Builder</Button>
+          </Link>
+          <Link
+          to="/orders">
           <Button 
           variant="contained" 
           color="primary"
-          className={classes.button}>Checkout</Button>
+          classes={
+            {
+              root: classes.buttonRoot
+            }
+          }
+          className={classes.button}>Orders</Button>
+          </Link>
         </Drawer>
         <main
           className={clsx(classes.content, {
