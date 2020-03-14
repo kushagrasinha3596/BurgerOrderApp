@@ -7,22 +7,58 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
     root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
+      textAlign: 'center'
     },
     inline: {
       display: 'inline',
     },
+    textAlignment:{
+      textAlign: 'center'
+    }
   }));
 
 const order = (props) => {
     const classes = useStyles();
+    const ingredients = [];
+
+    for(let ingredientName in props.ingredients){
+      ingredients.push({
+        name: ingredientName,
+        amount: props.ingredients[ingredientName]
+      });
+    }
+
+    const ingredient = ingredients.map((ing, index) => {
+    return <span 
+    style={
+      {
+        textTransform: 'capitalize',
+        display: 'inline-block',
+        margin: '0 8px',
+        border: '1px solid burlywood',
+        padding: '5px'
+      }
+    }
+    key={index}>{ing.name} [{ing.amount}] </span>
+    });
+
     return (
         <React.Fragment>
-          <ListItem alignItems="flex-start">
+          <ListItem alignItems="flex-start" style={{
+            backgroundColor: '#CF8F2E',
+            borderRadius: '25px',
+            width: '65%',
+            margin: 'auto',
+            marginBottom: '5px'
+          }}>
             <ListItemText
-              primary="salad"
+            classes={
+              {
+                secondary : classes.textAlignment,
+                root: classes.root
+              }
+            }
+              primary={ingredient}
               secondary={
                 <React.Fragment>
                   <Typography
@@ -31,13 +67,12 @@ const order = (props) => {
                     className={classes.inline}
                     color="textPrimary"
                   >
-                    Price: <strong>20</strong>
+                    Price: <strong>{props.price.toFixed(2)}</strong>
                   </Typography>
                 </React.Fragment>
               }
             />
           </ListItem>
-          <Divider variant="inset" component="li" />
         </React.Fragment>
       );
 }
