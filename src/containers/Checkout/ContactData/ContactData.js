@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CustomAxios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const styles = (theme) => ({
   root: {
@@ -30,10 +31,33 @@ class ContactData extends React.Component {
     loading: false
   }
 
-  handleChange = (event) => {
-    this.setState({
-      name: event.target.value
-    });
+  handleChange = (event, controlName) => {
+    if(controlName === 'name'){
+      this.setState({
+        name: event.target.value
+      });
+    }
+    if(controlName === 'email'){
+      this.setState({
+        email: event.target.value
+      });
+    }
+    if(controlName === 'street'){
+      this.setState({
+        address: {
+          ...this.state.address,
+          'street': event.target.value
+        }
+      });
+    }
+    if(controlName === 'postal'){
+      this.setState({
+        address: {
+          ...this.state.address,
+          'postalCode': event.target.value
+        }
+      });
+    }    
   };
 
   orderHandler = () => {
@@ -44,12 +68,14 @@ class ContactData extends React.Component {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
       customer: {
-        name: 'Kushagra Sinha',
-        address: 'Gaur City'
+        name: this.state.name,
+        email: this.state.email,
+        street: this.state.address.street,
+        postal: this.state.address.postalCode,
       },
       deliverMode: 'fastest'
     }
-
+    debugger
     CustomAxios.post('/orders.json', order)
       .then((response) => {
         console.log(response);
@@ -72,19 +98,19 @@ class ContactData extends React.Component {
     let form = (<form className={classes.root} noValidate autoComplete="off">
       <FormControl variant="outlined">
         <InputLabel htmlFor="Name">Name</InputLabel>
-        <OutlinedInput id="Name" value={this.state.name} onChange={this.handleChange} label="Name" />
+        <OutlinedInput id="Name" value={this.state.name} onChange={(event) => this.handleChange(event, 'name')} label="Name" />
       </FormControl>
       <FormControl variant="outlined">
         <InputLabel htmlFor="Email">Email</InputLabel>
-        <OutlinedInput id="Email" value={this.state.email} onChange={this.handleChange} label="Email" />
+        <OutlinedInput id="Email" value={this.state.email} onChange={(event) => this.handleChange(event, 'email')} label="Email" />
       </FormControl>
       <FormControl variant="outlined">
         <InputLabel htmlFor="street">Street</InputLabel>
-        <OutlinedInput id="street" value={this.state.address.street} onChange={this.handleChange} label="street" />
+        <OutlinedInput id="street" value={this.state.address.street} onChange={(event) => this.handleChange(event, 'street')} label="street" />
       </FormControl>
       <FormControl variant="outlined">
         <InputLabel htmlFor="postal">Postal</InputLabel>
-        <OutlinedInput id="postal" value={this.state.address.postalCode} onChange={this.handleChange} label="postal" />
+        <OutlinedInput id="postal" value={this.state.address.postalCode} onChange={(event) => this.handleChange(event, 'postal')} label="postal" />
       </FormControl>
       <Button
         variant="contained"
@@ -107,4 +133,11 @@ class ContactData extends React.Component {
   }
 }
 
-export default withRouter(withStyles(styles)(ContactData));
+const mapStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(withStyles(styles)(ContactData)));
