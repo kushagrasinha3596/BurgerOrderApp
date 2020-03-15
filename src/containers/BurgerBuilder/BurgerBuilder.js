@@ -8,7 +8,7 @@ import Loader from '../../components/UI/Spinner/Spinner';
 import ErrorHandler from '../../hoc/WithError/ErrorHandler';
 import Typography from '@material-ui/core/Typography';
 import {connect} from 'react-redux';
-import * as actions from '../../store/action';
+import * as burgerBuilderActions from '../../store/actions/burgerBuilder';
 
 
 
@@ -157,16 +157,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onIngredientAdded: (ingName) => {
-            dispatch({
-                type:actions.ADD_INGREDIENT,
-                ingredientName: ingName
-            });
+            dispatch(burgerBuilderActions.onIngredientAdded(ingName));
         },
         onIngredientRemoved: (ingName) => {
-            dispatch({
-                type:actions.REMOVE_INGREDIENT,
-                ingredientName: ingName
-            });
+            dispatch(burgerBuilderActions.onIngredientRemoved(ingName));
         }
     }
 }
