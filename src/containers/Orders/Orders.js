@@ -2,66 +2,55 @@ import React from 'react';
 import Order from '../../components/Order/Order';
 import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
-import CustomAxios from '../../axios-orders';
 import withError from '../../hoc/WithError/ErrorHandler';
 import customAxios from '../../axios-orders';
+import * as orderAction from '../../store/actions/order';
+import { connect } from 'react-redux';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 const styles = (theme) => ({
     root: {
-      width: '100%',
-      backgroundColor: theme.palette.background.paper,
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
     }
-  });
+});
 
-class Orders extends React.Component{
+class Orders extends React.Component {
 
-    state = {
-        fetchedOrders: [],
-        loading: false
-    }
-
-    componentDidMount(){
-        this.setState({
-            loading: true
-        });
-        CustomAxios.get('/orders.json')
-        .then((res) => {
-            const fetchedOrders = [];
-                for(let orderKey in res.data){
-                    fetchedOrders.push({
-                        ...res.data[orderKey],
-                        id: orderKey
-                    });
-                }
-                this.setState({
-                    fetchedOrders : fetchedOrders,
-                    loading: false
-                });
-        })
-        .catch((error) => {
-            this.setState({
-                loading: false
-            });
-            console.log("Error in fetching orders ", error);
-        });
+    componentDidMount() {
+        this.props.fetchOrderDisp();
     }
 
     render() {
-        let {classes} = this.props;
-        debugger
-        return (
-            <List className={classes.root}>
-                {
-                    this.state.fetchedOrders.map((order) => (
-                        <Order
-                         ingredients = {order.ingredients}
-                         price = {+order.price}
-                        ></Order>
-                    ))
-                }
-            </List>
-        );
+        let { classes } = this.props;
+        let orders = <Spinner></Spinner>;
+        if (!this.props.loading) {
+            orders = this.props.orders.map((order) => (
+                <Order
+                    ingredients={order.ingredients}
+                    price={+order.price}
+                ></Order>
+            ))
+            orders = <List className={classes.root}>{orders}</List>
+        }
+        return(
+            orders
+        )   
+    }
+    
+}
+
+const mapStateToProps = (state) => {
+    return {
+        orders: state.orderRed.orders,
+        loading: state.orderRed.loading
     }
 }
 
-export default withStyles(styles)(withError(Orders, customAxios));
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchOrderDisp: () => dispatch(orderAction.fetchOrder())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withError(Orders, customAxios)));

@@ -10,6 +10,8 @@ import CustomAxios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
+import withError from '../../../hoc/WithError/ErrorHandler';
+import * as OrderBurgerAction from '../../../store/actions/order';
 
 const styles = (theme) => ({
   root: {
@@ -27,8 +29,7 @@ class ContactData extends React.Component {
     address: {
       street: '',
       postalCode: ''
-    },
-    loading: false
+    }
   }
 
   handleChange = (event, controlName) => {
@@ -61,9 +62,6 @@ class ContactData extends React.Component {
   };
 
   orderHandler = () => {
-    this.setState({
-      loading: true
-    });
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
@@ -75,22 +73,8 @@ class ContactData extends React.Component {
       },
       deliverMode: 'fastest'
     }
-    debugger
-    CustomAxios.post('/orders.json', order)
-      .then((response) => {
-        console.log(response);
-        console.log(this.props);
-        this.setState({
-          loading: false
-        });
-        this.props.history.push('/');
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({
-          loading: false
-        });
-      });
+    this.props.onOrderBurger(order);
+    this.props.history.push('/');
   }
 
   render() {
@@ -119,7 +103,7 @@ class ContactData extends React.Component {
         onClick={this.orderHandler}
       >ORDER</Button>
     </form>);
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner></Spinner>;
     }
     return (
@@ -135,9 +119,16 @@ class ContactData extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice
+    ingredients: state.burgerRed.ingredients,
+    totalPrice: state.burgerRed.totalPrice,
+    loading: state.orderRed.loading
   }
 }
 
-export default connect(mapStateToProps)(withRouter(withStyles(styles)(ContactData)));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onOrderBurger: (orderData) => dispatch(OrderBurgerAction.purchaseBurger(orderData))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withError((withStyles(styles)(ContactData)), CustomAxios)));

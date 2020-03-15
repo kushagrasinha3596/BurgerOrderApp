@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
       textAlign: 'center'
     },
     inline: {
-      display: 'inline',
+      display: 'inline-block'
     },
     textAlignment:{
       textAlign: 'center'
@@ -33,7 +33,7 @@ const order = (props) => {
       {
         textTransform: 'capitalize',
         display: 'inline-block',
-        margin: '0 8px',
+        margin: '2px 8px',
         border: '1px solid burlywood',
         padding: '5px'
       }

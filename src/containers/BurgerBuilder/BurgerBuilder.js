@@ -16,25 +16,11 @@ class BurgerBuilder extends React.Component {
     
     state = {
         purchasing: false,
-        loading: false,
         error: false
     }
 
     componentDidMount(){
-        // CustomAxios.get('https://burgerbuilder-ea448.firebaseio.com/ingredients.json')
-        // .then((response)=> {
-        //     this.setState({
-        //         ingredients: response.data
-        //     });
-        // })
-        // .catch((error) => {
-        //     this.setState({
-        //         loading: false,
-        //         error: true,
-        //         purchaseable: false
-        //     });
-        //     console.log("Error ocurred in fetching data ", error);
-        // });
+        this.props.onInitIngredients();
     }
 
     updatePurchaseable = (updatedIngredient) => {
@@ -102,8 +88,8 @@ class BurgerBuilder extends React.Component {
         }
 
         let ordersummary = null;
-        if(this.state.loading || !this.props.rIngredients){
-            ordersummary = this.state.error ? 
+        if(!this.props.rIngredients){
+            ordersummary = this.props.rError ? 
            
             <Typography variant="h3" gutterBottom>
             Sorry! Can't Load Ingredients...
@@ -117,7 +103,7 @@ class BurgerBuilder extends React.Component {
             price={this.props.rTotalPrice}></OrderSummary>
         }
 
-        let burger = this.state.error ? 
+        let burger = this.props.rError ? 
       
         <Typography variant="h3" gutterBottom>
             Sorry! Can't Load Ingredients...
@@ -135,7 +121,7 @@ class BurgerBuilder extends React.Component {
                 </Modal>
                 {burger}
                 <BuildControls
-                error = {this.state.error.message}
+                error = {this.props.rError.message}
                 ingredientAdded={this.props.onIngredientAdded}
                 removeIngredient={this.props.onIngredientRemoved}
                 toDisable={disabledInfo}
@@ -149,8 +135,9 @@ class BurgerBuilder extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        rIngredients: state.ingredients,
-        rTotalPrice: state.totalPrice
+        rIngredients: state.burgerRed.ingredients,
+        rTotalPrice: state.burgerRed.totalPrice,
+        rError: state.burgerRed.error
     }
 }
 
@@ -161,6 +148,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onIngredientRemoved: (ingName) => {
             dispatch(burgerBuilderActions.onIngredientRemoved(ingName));
+        },
+        onInitIngredients: () => {
+            dispatch(burgerBuilderActions.fetchIngredientsRequest());
         }
     }
 }
