@@ -177,6 +177,18 @@ const appBar = () => {
           }
           className={classes.button}>Orders</Button>
           </Link>
+          <Link
+          to="/auth">
+          <Button 
+          variant="contained" 
+          color="primary"
+          classes={
+            {
+              root: classes.buttonRoot
+            }
+          }
+          className={classes.button}>Login</Button>
+          </Link>
         </Drawer>
         <main
           className={clsx(classes.content, {
