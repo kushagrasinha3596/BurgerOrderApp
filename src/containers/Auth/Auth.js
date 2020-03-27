@@ -62,10 +62,9 @@ class Auth extends Component {
             email: '',
             password: ''
         }
-        this.submitHandler = this.submitHandler.bind(this);
     }
 
-    handleChange = (event, type) => {
+    handleChange = (event, type) =>{
         if (type === 'Email') {
             this.setState({
                 email: event.target.value
@@ -77,14 +76,12 @@ class Auth extends Component {
         }
     }
 
-    submitHandler = (event) => {
+    submitHandler = (event) =>{
         event.preventDefault();
-        debugger
         this.props.onSubmit(this.state.email, this.state.password);
     }
 
     render() {
-        debugger
         const { classes } = this.props;
         return (
             <React.Fragment>
@@ -134,7 +131,7 @@ class Auth extends Component {
                                 onClick={this.submitHandler}
                                 className={classes.submit}
                             >
-                                Sign In
+                                Sign Up
           </Button>
                             <Grid container>
                                 <Grid item xs>
@@ -160,7 +157,6 @@ class Auth extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    debugger
     return {
         onSubmit: (email, password) => dispatch(actions.auth(email, password))
     }
