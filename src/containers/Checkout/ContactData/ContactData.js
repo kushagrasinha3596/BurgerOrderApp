@@ -107,7 +107,7 @@ class ContactData extends React.Component {
       form = <Spinner></Spinner>;
     }
     return (
-      <Box width="80%" position="center">
+    <Box width="80%" position="center">
         <Typography variant="h4" gutterBottom>
           Please enter your contact data
         </Typography>

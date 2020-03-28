@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -60,7 +58,8 @@ class Auth extends Component {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            signUp: true
         }
     }
 
@@ -78,7 +77,13 @@ class Auth extends Component {
 
     submitHandler = (event) =>{
         event.preventDefault();
-        this.props.onSubmit(this.state.email, this.state.password);
+        this.props.onSubmit(this.state.email, this.state.password, this.state.signUp);
+    }
+
+    changeMode = () =>{
+        this.setState((prevState) => {
+            return {signUp: !prevState.signUp}
+        });
     }
 
     render() {
@@ -92,7 +97,7 @@ class Auth extends Component {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            {this.state.signUp? "Sign Up": "Sign In" }
         </Typography>
                         <form className={classes.form} noValidate>
                             <TextField
@@ -119,30 +124,46 @@ class Auth extends Component {
                                 onChange={(event) => this.handleChange(event, 'Password')}
                                 autoComplete="current-password"
                             />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                onClick={this.submitHandler}
-                                className={classes.submit}
-                            >
-                                Sign Up
-          </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="#" variant="body2">
-                                        Forgot password?
-                </Link>
-                                </Grid>
+                                {
+                                        this.state.signUp ?
+                                        <Button 
+                                        fullWidth
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={this.submitHandler}
+                                        className={classes.submit}>
+                                        Sign Up
+                                        </Button>:
+                                        <Button 
+                                        fullWidth
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={this.submitHandler}
+                                        className={classes.submit}>
+                                        Sign In
+                                        </Button>
+                                    }
+                            <Grid justify="center" container>
                                 <Grid item>
-                                    <Link href="#" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
+                                    {
+                                        this.state.signUp ?
+                                        <Button 
+                                        href="#" 
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={this.changeMode}>
+                                        Already have account? Sign In
+                                        </Button>:
+                                        <Button 
+                                        href="#" 
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={this.changeMode}>
+                                        Don't have account? Sign Up
+                                    </Button>
+                                    }
                                 </Grid>
                             </Grid>
                         </form>
@@ -158,7 +179,7 @@ class Auth extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSubmit: (email, password) => dispatch(actions.auth(email, password))
+        onSubmit: (email, password, signUp) => dispatch(actions.auth(email, password, signUp))
     }
 }
 
