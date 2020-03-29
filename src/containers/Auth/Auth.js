@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import { Redirect } from 'react-router-dom';
 
 const styles = (theme) => ({
     root: {
@@ -89,7 +90,10 @@ class Auth extends Component {
 
     render() {
         const { classes } = this.props;
-
+        let redirect = null;
+        if(this.props.rIsAuthenticated){
+            redirect = <Redirect to="/"/>
+        }
         let userContainer = <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -186,6 +190,7 @@ class Auth extends Component {
     }
         return (
             <React.Fragment>
+                { redirect }
                 { error }
                 { userContainer }
             </React.Fragment>
@@ -196,7 +201,8 @@ class Auth extends Component {
 const matStateToProps = (state) => {
     return {
         rLoader: state.authRed.loader,
-        rError:  state.authRed.error
+        rError:  state.authRed.error,
+        rIsAuthenticated: state.authRed.token !== null
     }
 }
 

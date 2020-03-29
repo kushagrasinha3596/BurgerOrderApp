@@ -23,13 +23,13 @@ export const authFail = (error) => {
 }
 
 export const logout = () => {
+    debugger
     return {
         type: actionTypes.AUTH_LOGOUT
     }
 }
 
 export const expirationTime = (expTime) => {
-    debugger
     return (dispatch) => {
         setTimeout(() => {
             dispatch(logout());

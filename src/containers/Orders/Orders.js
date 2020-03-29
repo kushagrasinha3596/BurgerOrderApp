@@ -18,7 +18,7 @@ const styles = (theme) => ({
 class Orders extends React.Component {
 
     componentDidMount() {
-        this.props.fetchOrderDisp();
+        this.props.fetchOrderDisp(this.props.token);
     }
 
     render() {
@@ -43,13 +43,14 @@ class Orders extends React.Component {
 const mapStateToProps = (state) => {
     return {
         orders: state.orderRed.orders,
-        loading: state.orderRed.loading
+        loading: state.orderRed.loading,
+        token: state.authRed.token
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchOrderDisp: () => dispatch(orderAction.fetchOrder())
+        fetchOrderDisp: (token) => dispatch(orderAction.fetchOrder(token))
     }
 }
 

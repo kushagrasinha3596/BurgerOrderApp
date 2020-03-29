@@ -1,10 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
 import {
-    createMuiTheme, 
-    makeStyles, 
-    ThemeProvider, 
-    useTheme } from '@material-ui/core/styles';
+  createMuiTheme,
+  makeStyles,
+  ThemeProvider,
+  useTheme
+} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,106 +17,114 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Button from '@material-ui/core/Button';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actionTypes from '../../../store/actions/auth';
+import { withRouter } from 'react-router-dom';
 
 const drawerWidth = 150;
 
 const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      zIndex: '90',
-      position: 'fixed'
-    },
-    button:{
-      margin: '5px',
-      backgroundColor: '#99703F'
-    },
-    buttonRoot: {
-      display: 'inline-block'
-    },
-    appBar: {
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    hide: {
-      display: 'none',
-    },
-    title: {
-      flexGrow: 1,
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,  
-    },
-    drawerPaper: {
-      width: drawerWidth,
-      backgroundColor: '#CF8F2E'
-    },
-    drawerHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(0, 1),
-      ...theme.mixins.toolbar,
-      justifyContent: 'flex-end',
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: -drawerWidth,
-    },
-    contentShift: {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    },
-  }));
+  root: {
+    display: 'flex',
+    zIndex: '90',
+    position: 'fixed'
+  },
+  button: {
+    margin: '5px',
+    backgroundColor: '#99703F'
+  },
+  buttonRoot: {
+    display: 'inline-block'
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  hide: {
+    display: 'none',
+  },
+  title: {
+    flexGrow: 1,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    backgroundColor: '#CF8F2E'
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+}));
 
-  const customTheme = createMuiTheme({
-    overrides: {
-      MuiAppBar: {
-        colorPrimary : {
-          backgroundColor: '#703B09'
-        }
+const customTheme = createMuiTheme({
+  overrides: {
+    MuiAppBar: {
+      colorPrimary: {
+        backgroundColor: '#703B09'
       }
     }
-  });
+  }
+});
 
-const appBar = () => {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
-  
-    const handleDrawerOpen = () => {
-      setOpen(true);
-    };
-  
-    const handleDrawerClose = () => {
-      setOpen(false);
-    };
-  
-    return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <ThemeProvider theme={customTheme}>
+const appBar = (props) => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const onClickHandler = () => {
+    props.logout();
+    props.history.replace("/");
+  }
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <ThemeProvider theme={customTheme}>
         <AppBar
           position="fixed"
           className={clsx(classes.appBar, {
@@ -137,68 +146,93 @@ const appBar = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-        </ThemeProvider>
-        <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={open}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-            </IconButton>
-          </div>
-          <Divider />
-          <Link
+      </ThemeProvider>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <Link
           to="/">
-          <Button 
-          variant="contained" 
-          color="primary"
-          classes={
-            {
-              root: classes.buttonRoot
+          <Button
+            variant="contained"
+            color="primary"
+            classes={
+              {
+                root: classes.buttonRoot
+              }
             }
-          }
-          className={classes.button}>Burger Builder</Button>
-          </Link>
-          <Link
+            className={classes.button}>Burger Builder</Button>
+        </Link>
+        {
+          props.isAuthenticated ? <Link
           to="/orders">
-          <Button 
-          variant="contained" 
-          color="primary"
-          classes={
-            {
-              root: classes.buttonRoot
+          <Button
+            variant="contained"
+            color="primary"
+            classes={
+              {
+                root: classes.buttonRoot
+              }
             }
+            className={classes.button}>Orders</Button>
+        </Link> : ''
+        }
+          {
+            props.isAuthenticated ? <Button
+              variant="contained"
+              color="primary"
+              classes={
+                {
+                  root: classes.buttonRoot
+                }
+              }
+              className={classes.button} onClick={onClickHandler}>Logout</Button> :
+              <Link
+              to="/auth">
+              <Button
+                variant="contained"
+                color="primary"
+                classes={
+                  {
+                    root: classes.buttonRoot
+                  }
+                }
+                className={classes.button}>Login</Button>
+                </Link>
           }
-          className={classes.button}>Orders</Button>
-          </Link>
-          <Link
-          to="/auth">
-          <Button 
-          variant="contained" 
-          color="primary"
-          classes={
-            {
-              root: classes.buttonRoot
-            }
-          }
-          className={classes.button}>Login</Button>
-          </Link>
-        </Drawer>
-        <main
-          className={clsx(classes.content, {
-            [classes.contentShift]: open,
-          })}
-        >
-          <div className={classes.drawerHeader} />
-        </main>
-      </div>
-    );
+      </Drawer>
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        <div className={classes.drawerHeader} />
+      </main>
+    </div>
+  );
 }
 
-export default appBar;
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.authRed.token !== null
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch(actionTypes.logout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(appBar));

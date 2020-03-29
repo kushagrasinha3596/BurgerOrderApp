@@ -73,7 +73,7 @@ class ContactData extends React.Component {
       },
       deliverMode: 'fastest'
     }
-    this.props.onOrderBurger(order);
+    this.props.onOrderBurger(order, this.props.token);
     this.props.history.push('/');
   }
 
@@ -121,13 +121,14 @@ const mapStateToProps = (state) => {
   return {
     ingredients: state.burgerRed.ingredients,
     totalPrice: state.burgerRed.totalPrice,
-    loading: state.orderRed.loading
+    loading: state.orderRed.loading,
+    token: state.authRed.token
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onOrderBurger: (orderData) => dispatch(OrderBurgerAction.purchaseBurger(orderData))
+    onOrderBurger: (orderData, token) => dispatch(OrderBurgerAction.purchaseBurger(orderData, token))
   }
 }
 

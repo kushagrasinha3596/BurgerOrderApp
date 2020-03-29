@@ -47,7 +47,8 @@ const buildControls = (props) => {
                         <Button
                             variant="contained"
                             onClick={props.purchase}
-                            disabled={!props.purchaseable}>CONTINUE</Button>
+                            disabled={!props.purchaseable}>
+                            {props.isAuthenticated ? 'CONTINUE' : 'Login To Continue'}</Button>
                     </div>
                 </Grid>
             </Grid>
