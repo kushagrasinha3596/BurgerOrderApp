@@ -12,6 +12,7 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 const styles = (theme) => ({
     root: {
@@ -88,92 +89,114 @@ class Auth extends Component {
 
     render() {
         const { classes } = this.props;
+
+        let userContainer = <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+                {this.state.signUp? "Sign Up": "Sign In" }
+</Typography>
+            <form className={classes.form} noValidate>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="email"
+                    label="Email Address"
+                    id="email"
+                    value={this.state.email}
+                    onChange={(event) => this.handleChange(event, 'Email')}
+                    autoComplete="email"
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    onChange={(event) => this.handleChange(event, 'Password')}
+                    autoComplete="current-password"
+                />
+                    {
+                            this.state.signUp ?
+                            <Button 
+                            fullWidth
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            onClick={this.submitHandler}
+                            className={classes.submit}>
+                            Sign Up
+                            </Button>:
+                            <Button 
+                            fullWidth
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            onClick={this.submitHandler}
+                            className={classes.submit}>
+                            Sign In
+                            </Button>
+                        }
+                <Grid justify="center" container>
+                    <Grid item>
+                        {
+                            this.state.signUp ?
+                            <Button 
+                            href="#" 
+                            variant="contained"
+                            color="primary"
+                            onClick={this.changeMode}>
+                            Already have account? Sign In
+                            </Button>:
+                            <Button 
+                            href="#" 
+                            variant="contained"
+                            color="primary"
+                            onClick={this.changeMode}>
+                            Don't have account? Sign Up
+                        </Button>
+                        }
+                    </Grid>
+                </Grid>
+            </form>
+        </div>
+        <Box mt={8}>
+            <Copyright />
+        </Box>
+    </Container>
+
+    if(this.props.rLoader){
+        userContainer = <Spinner/>
+    }
+
+    let error = null;
+
+    if(this.props.rError){
+        error = <Box>
+           { this.props.rError.message } 
+        </Box>
+    }
         return (
             <React.Fragment>
-                <Container component="main" maxWidth="xs">
-                    <CssBaseline />
-                    <div className={classes.paper}>
-                        <Avatar className={classes.avatar}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            {this.state.signUp? "Sign Up": "Sign In" }
-        </Typography>
-                        <form className={classes.form} noValidate>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="email"
-                                label="Email Address"
-                                id="email"
-                                value={this.state.email}
-                                onChange={(event) => this.handleChange(event, 'Email')}
-                                autoComplete="email"
-                            />
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                onChange={(event) => this.handleChange(event, 'Password')}
-                                autoComplete="current-password"
-                            />
-                                {
-                                        this.state.signUp ?
-                                        <Button 
-                                        fullWidth
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.submitHandler}
-                                        className={classes.submit}>
-                                        Sign Up
-                                        </Button>:
-                                        <Button 
-                                        fullWidth
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.submitHandler}
-                                        className={classes.submit}>
-                                        Sign In
-                                        </Button>
-                                    }
-                            <Grid justify="center" container>
-                                <Grid item>
-                                    {
-                                        this.state.signUp ?
-                                        <Button 
-                                        href="#" 
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.changeMode}>
-                                        Already have account? Sign In
-                                        </Button>:
-                                        <Button 
-                                        href="#" 
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.changeMode}>
-                                        Don't have account? Sign Up
-                                    </Button>
-                                    }
-                                </Grid>
-                            </Grid>
-                        </form>
-                    </div>
-                    <Box mt={8}>
-                        <Copyright />
-                    </Box>
-                </Container>
+                { error }
+                { userContainer }
             </React.Fragment>
         );
+    }
+}
+
+const matStateToProps = (state) => {
+    return {
+        rLoader: state.authRed.loader,
+        rError:  state.authRed.error
     }
 }
 
@@ -183,4 +206,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Auth));
+export default connect(matStateToProps, mapDispatchToProps)(withStyles(styles)(Auth));

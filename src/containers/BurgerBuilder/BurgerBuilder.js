@@ -13,7 +13,7 @@ import * as burgerBuilderActions from '../../store/actions/burgerBuilder';
 
 
 class BurgerBuilder extends React.Component {
-    
+
     state = {
         purchasing: false,
         error: false
